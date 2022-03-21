@@ -8,10 +8,10 @@ export default {
 
         {
             format: "cjs",
-            file: "pkg.main"
+            file: pkg.main
         }, {
             format: "es",
-            file: "pkg.modules"
+            file: pkg.module
         }
     ],
     plugins: [
