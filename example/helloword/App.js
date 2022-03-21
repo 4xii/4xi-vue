@@ -5,13 +5,19 @@ export const App = {
         return h("div", {
             id: "root",
             class: ["red", "hard"]
-        }, [h("p", { class: "red" }, "hi"), h("p", { class: "blue" }, "4xi-vue")])
+        },
+            //setupSate
+            //this.$el
+            "hi," + this.msg
+            //array
+            //[h("p", { class: "red" }, "hi"), h("p", { class: "blue" }, "4xi-vue")]
+        )
     },
 
     setup() {
         //composition api
         return {
-            masg: "4xi-vue"
+            msg: "4xi-vue"
         }
     }
 }
