@@ -1,6 +1,9 @@
 import { h } from '../../lib/guide-4xi-vue.esm.js'
+
+window.self = null;
 export const App = {
     render() {
+        window.self = this;
         // ui
         return h("div", {
             id: "root",
@@ -17,7 +20,7 @@ export const App = {
     setup() {
         //composition api
         return {
-            msg: "4xi-vue"
+            msg: "4xi-vue-1"
         }
     }
 }

@@ -1,4 +1,5 @@
 import { isObject } from "../shared/index";
+import { shapeFlags } from "../shared/ShapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
 
 export function render(vnode, container) {
@@ -9,15 +10,12 @@ export function render(vnode, container) {
 
 function patch(vnode, container) {
 
-    // 去处理组件
+    const { shapeFlag } = vnode;
 
-    // 判断 是不是 element
-    // element
-    // todo 区分element类型 component类型
     //processElement()
-    if (typeof vnode.type === 'string') {
+    if (shapeFlag & shapeFlags.ELEMENT) {
         processElement(vnode, container);
-    } else if (isObject(vnode.type)) {
+    } else if (shapeFlag & shapeFlags.STATEFULE_COMPONENT) {
         processComponent(vnode, container);
     }
 
@@ -30,20 +28,16 @@ function processComponent(vnode: any, container: any) {
     mountComponent(vnode, container)
 }
 
-function mountComponent(vnode: any, container: any) {
-    const instance = createComponentInstance(vnode);
-    setupComponent(instance)
-    setupRenderEffect(instance, container)
-}
+
 
 function mountElement(vnode: any, container: any) {
-    const el: Element = document.createElement(vnode.type)
+    const el: Element = (vnode.el = document.createElement(vnode.type))
     // string array
-    const { children } = vnode
+    const { children, shapeFlag } = vnode
 
-    if (typeof children === "string") {
+    if (shapeFlag & shapeFlags.TEXT_CHILDREN) {
         el.textContent = children;
-    } else if (Array.isArray(children)) {
+    } else if (shapeFlag & shapeFlags.ARRAY_CHILDREN) {
         // vnode
         mountChildren(vnode, el)
     }
@@ -66,7 +60,13 @@ function mountChildren(vnode, container) {
     })
 }
 
-function setupRenderEffect(instance, container) {
+function mountComponent(initialVNode: any, container: any) {
+    const instance = createComponentInstance(initialVNode);
+    setupComponent(instance)
+    setupRenderEffect(instance, initialVNode, container)
+}
+
+function setupRenderEffect(instance, initialVNode, container) {
     const { proxy } = instance
     const subTree = instance.render.call(proxy);
 
@@ -75,4 +75,6 @@ function setupRenderEffect(instance, container) {
 
     patch(subTree, container)
 
+    //element -> mount
+    initialVNode.el = subTree.el
 }
