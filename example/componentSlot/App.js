@@ -8,10 +8,11 @@ export const App = {
       Foo,
       {},
       {
-        header: h("p", {}, "123slots"),
-        footer: h("p", {}, "456slots"),
+        header: ({ age }) => h("p", {}, "123slots" + age),
+        footer: () => h("p", {}, "456slots"),
       }
     );
+    console.log("this.$slots", app, foo);
     return h("div", {}, [app, foo]);
   },
 
