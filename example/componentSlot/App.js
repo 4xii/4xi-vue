@@ -1,4 +1,4 @@
-import { h } from "../../lib/guide-4xi-vue.esm.js";
+import { h, createTextVnode } from "../../lib/guide-4xi-vue.esm.js";
 import { Foo } from "./Foo.js";
 export const App = {
   name: "App",
@@ -8,7 +8,10 @@ export const App = {
       Foo,
       {},
       {
-        header: ({ age }) => h("p", {}, "123slots" + age),
+        header: ({ age }) => [
+          h("p", {}, "123slots" + age),
+          createTextVnode("你好呀！！！"),
+        ],
         footer: () => h("p", {}, "456slots"),
       }
     );
