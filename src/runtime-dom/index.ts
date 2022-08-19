@@ -3,14 +3,18 @@ function createElement(type) {
   return document.createElement(type);
 }
 
-export function patchProp(el, key, val) {
+export function patchProp(el, key, prevVal, nextVal) {
   // 具体的click  -》 通用
   const isOn = (key: string) => /^on[A-Z]/.test(key);
   if (isOn(key)) {
     const event = key.slice(2).toLowerCase();
-    el.addEventListener(event, val);
+    el.addEventListener(event, nextVal);
   } else {
-    el.setAttribute(key, val);
+    if (nextVal === undefined || nextVal === null) {
+      el.removeAttribute(key);
+    } else {
+      el.setAttribute(key, nextVal);
+    }
   }
 }
 
@@ -19,9 +23,9 @@ export function insert(el, parent) {
 }
 
 const renderer: any = createRenderer({
-  hostCreateElement: createElement,
-  hostPatchProp: patchProp,
-  hostInsert: insert,
+  createElement,
+  patchProp,
+  insert,
 });
 
 export function createApp(...args) {
